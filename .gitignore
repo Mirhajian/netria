@@ -1,0 +1,33 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Lua/Neovim related
+lua_modules/
+.luarocks/
+
+# Runtime files
+*.so
+*.dylib
+*.dll
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Distribution / packaging
+dist/
+build/
