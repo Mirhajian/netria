@@ -40,7 +40,7 @@
 
 ```lua
 {
-  "username/netria",
+  "mirhajian/netria",
   config = function()
     require("netria").setup({
       -- optional configuration here
@@ -55,7 +55,7 @@
 
 ```lua
 use {
-  "username/netria",
+  "mirhajian/netria",
   config = function()
     require("netria").setup({})
   end
@@ -67,7 +67,7 @@ use {
 <summary><b>vim-plug</b></summary>
 
 ```vim
-Plug 'username/netria'
+Plug 'mirhajian/netria'
 
 " In your init.vim after plug#end()
 lua require('netria').setup({})
