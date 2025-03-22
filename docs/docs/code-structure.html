@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netria - Code Structure | Documentation</title>
+    <meta name="description" content="Detailed code structure and architecture documentation for Netria, a clean, modern floating UI for Netrw in Neovim.">
+    <meta name="keywords" content="Neovim, Netrw, Netria, file explorer, Vim plugin, floating UI, Lua plugin, code structure">
+    <meta name="author" content="Abolfazl Mirhajian">
+    
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Netria - Code Structure Documentation">
+    <meta property="og:description" content="Explore the code structure and architecture of Netria, a lightweight Neovim plugin.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/Mirhajian/netria">
+    
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Netria - Code Structure Documentation">
+    <meta name="twitter:description" content="Explore the code structure and architecture of Netria, a lightweight Neovim plugin.">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body class="dark-mode">
+    <nav>
+        <div class="container">
+            <div class="menu-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 12h18M3 6h18M3 18h18"/>
+                </svg>
+            </div>
+            <ul>
+                <li><a href="index.html#overview">Overview</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="index.html#installation">Installation</a></li>
+                <li><a href="index.html#usage">Usage</a></li>
+                <li><a href="index.html#configuration">Configuration</a></li>
+                <li><a href="index.html#architecture">Architecture</a></li>
+                <li><a href="code-structure.html">Code Structure</a></li>
+                <li><a href="index.html#faq">FAQ</a></li>
+            </ul>
+            <a href="https://github.com/Mirhajian" target="_blank" rel="noopener noreferrer" class="github-profile" onclick="event.preventDefault(); window.open(this.href, '_blank');">
+                <img src="https://github.com/Mirhajian.png" alt="Abolfazl Mirhajian's GitHub Profile">
+            </a>
+        </div>
+    </nav>
+
+    <div class="menu-overlay"></div>
+    <div class="sliding-menu">
+        <div class="menu-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </div>
+        <ul>
+            <li><a href="https://github.com/Mirhajian" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+                </svg>
+                GitHub Profile
+            </a></li>
+            <li><a href="index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                Main Documentation
+            </a></li>
+            <li><a href="https://github.com/Mirhajian/netria/archive/refs/heads/main.zip" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                Download Netria
+            </a></li>
+        </ul>
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="ascii-art">
+███╗   ██╗███████╗████████╗██████╗ ██╗ █████╗
+████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║██╔══██╗
+██╔██╗ ██║█████╗     ██║   ██████╔╝██║███████║
+██║╚██╗██║██╔══╝     ██║   ██╔══██╗██║██╔══██║
+██║ ╚████║███████╗   ██║   ██║  ██║██║██║  ██║
+╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝
+            </div>
+            <h1 class="hero-title typewriter">CODE STRUCTURE</h1>
+            <div class="hero-subtitle">Detailed overview of Netria's architecture and implementation</div>
+            <div class="hero-buttons">
+                <a href="#project-structure" class="hero-button primary">Project Structure</a>
+                <a href="#module-details" class="hero-button secondary">Module Details</a>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="ascii-banner">███╗   ██╗███████╗████████╗██████╗ ██╗ █████╗    ┌───────────────────────────────┐
+████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║██╔══██╗   │ Code Structure Documentation  │
+██╔██╗ ██║█████╗     ██║   ██████╔╝██║███████║   │ Understanding the Architecture │
+██║╚██╗██║██╔══╝     ██║   ██╔══██╗██║██╔══██║   │ of Netria Plugin              │
+██║ ╚████║███████╗   ██║   ██║  ██║██║██║  ██║   │                               │
+╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝   └───────────────────────────────┘</div>
+
+        <section id="project-structure" class="section">
+            <h2>Project Structure</h2>
+            <p>
+                Netria follows a modular architecture with clear separation of concerns. The project is structured in a way that 
+                makes it easy to understand, maintain, and extend. Here's an overview of the project's directory structure and 
+                the purpose of each file:
+            </p>
+
+            <div class="module-card">
+                <h3>Directory Structure</h3>
+                <pre><code>netria/
+├── lua/             # Main Lua modules
+│   └── netria/      # Plugin namespace
+│       ├── init.lua       # Entry point and public API
+│       ├── config.lua     # Configuration management
+│       ├── ui.lua         # Floating window UI
+│       ├── state.lua      # Plugin state management
+│       ├── netrw.lua      # Netrw integration
+│       ├── banner.lua     # Custom banner implementation
+│       ├── commands.lua   # User command registration
+│       └── events.lua     # Event handling
+├── plugin/          # Plugin loader 
+│   └── netria.lua   # Autoload bridge to init.lua
+├── docs/            # Documentation
+└── assets/          # Screenshots and assets</code></pre>
+            </div>
+
+            <h3>Module Dependencies</h3>
+            <p>
+                The Netria plugin follows a deliberate dependency structure to maintain clear separation of concerns. The diagram 
+                below illustrates how the modules depend on each other:
+            </p>
+            
+            <div class="module-card">
+                <pre><code>init.lua        # Entry point and public API
+  │
+  ├── config.lua    # Configuration management
+  │
+  ├── state.lua     # State management
+  │
+  ├── ui.lua        # UI creation and management
+  │    │ 
+  │    ├── config.lua
+  │    └── state.lua
+  │
+  ├── netrw.lua     # Netrw integration
+  │    │
+  │    ├── state.lua
+  │    └── banner.lua
+  │
+  ├── banner.lua    # Custom banner handling
+  │    │
+  │    ├── config.lua
+  │    └── state.lua
+  │
+  ├── commands.lua  # Commands and keymaps
+  │    │
+  │    ├── config.lua
+  │    ├── state.lua
+  │    └── ui.lua
+  │
+  └── events.lua    # Event handling
+       │
+       ├── state.lua
+       ├── config.lua
+       └── banner.lua</code></pre>
+            </div>
+            
+            <h3>Plugin Initialization Flow</h3>
+            <p>
+                When Netria is loaded by Neovim, the following initialization flow occurs:
+            </p>
+            
+            <ol>
+                <li><strong>Plugin entry point:</strong> <code>plugin/netria.lua</code> simply returns the module from <code>lua/netria/init.lua</code>.</li>
+                <li><strong>User configuration:</strong> When the user calls <code>require('netria').setup(options)</code>, the configuration is merged with defaults.</li>
+                <li><strong>State initialization:</strong> The plugin state module is initialized with default values.</li>
+                <li><strong>Netrw hooks setup:</strong> The plugin sets up hooks to interact with Netrw events.</li>
+                <li><strong>Commands registration:</strong> User commands are registered for controlling the plugin.</li>
+                <li><strong>Events setup:</strong> Autocmds are set up to handle various Neovim events.</li>
+                <li><strong>VimEnter handling:</strong> If Neovim was started with a directory argument, the plugin will open automatically.</li>
+            </ol>
+            
+            <div class="tip">
+                <p><strong>Tip:</strong> This modular design allows you to understand one aspect of the plugin at a time, making it easier to customize or extend.</p>
+            </div>
+        </section>
+
+        <section id="module-details" class="section">
+            <h2>Module Details</h2>
+            <p>
+                Each Lua module in Netria has a specific responsibility. Let's explore each one in detail to understand
+                how they work together to provide the plugin's functionality.
+            </p>
+            
+            <div class="module-card" id="init-module">
+                <h3>init.lua - Entry Point</h3>
+                <p>
+                    This is the main entry point of the plugin, responsible for initializing all other modules and exporting
+                    the public API functions that users interact with.
+                </p>
+                
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Exports the public API functions (<code>open</code>, <code>close</code>, <code>toggle</code>)</li>
+                    <li>Provides the <code>setup()</code> function for configuration</li>
+                    <li>Orchestrates the initialization of other modules</li>
+                    <li>Handles directory arguments when Neovim is started with a directory</li>
+                </ul>
+                
+                <h4>Key Code Sections:</h4>
+                <pre><code>-- Public API functions
+function M.open(directory)
+  ui.open(directory)
+end
+
+function M.close()
+  ui.close()
+end
+
+function M.toggle(directory)
+  ui.toggle(directory)
+end
+
+-- Plugin initialization
+function M.setup(opts)
+  -- merge user config with defaults
+  config.update(opts or {})
+  
+  state.initialize()
+  netrw.setup_hooks()
+  commands.setup(M)
+  
+  events.setup()
+  
+  -- Handle directory arguments
+  vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+      if not state.initialized then
+        state.initialized = true
+        
+        if netrw.handle_directory_args() then
+          vim.schedule(function()
+            M.open(state.current_dir)
+          end)
+          
+          -- Add a keybinding to quit when opened directly with a directory
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = "netrw",
+            callback = function()
+              vim.api.nvim_buf_set_keymap(0, "n", "q", 
+                ":qa<CR>", {noremap = true, silent = true})
+            end
+          })
+        end
+      end
+    end,
+    once = true
+  })</code></pre>
+                
+                <p>
+                    The module's main job is to serve as the interface between the user and the plugin's internal components.
+                    It delegates the actual implementation to specialized modules while coordinating their interactions.
+                </p>
+            </div>
+            
+            <div class="module-card" id="config-module">
+                <h3>config.lua - Configuration Management</h3>
+                <p>
+                    This module manages the plugin's configuration, defining default values and providing functions to update them
+                    with user-provided settings.
+                </p>
+                
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Defines default configuration values</li>
+                    <li>Merges user configuration with defaults</li>
+                    <li>Provides access to the configuration throughout the plugin</li>
+                </ul>
+                
+                <h4>Default Configuration:</h4>
+                <pre><code>-- Default configuration
+M.defaults = {
+  title = " Netria ",
+  position = "center",
+  centered = true,
+  width = 0.7,
+  height = 0.8,
+  
+  border = true,
+  border_style = "rounded",
+  
+  hide_banner = true,
+  liststyle = 3,
+  winsize = 0,
+  show_line_numbers = true,
+  show_relative_numbers = true,
+  no_modify = true,
+  readonly = true,
+  no_wrap = true,
+
+  apply_numbers_to_files = true,
+
+  banner = {
+    enabled = true,
+    art = {
+        "", 
+        "███╗   ██╗███████╗████████╗██████╗ ██╗ █████╗    ┌───────────────────────────────┐",
+        "████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║██╔══██╗   │ Netria - A Nice Looking Netrw │",
+        "██╔██╗ ██║█████╗     ██║   ██████╔╝██║███████║   │ Version: 1.0.0                │",
+        "██║╚██╗██║██╔══╝     ██║   ██╔══██╗██║██╔══██║   │ :Netria - Open Explorer       │",
+        "██║ ╚████║███████╗   ██║   ██║  ██║██║██║  ██║   │ :NetriaToggle - Toggle Netria │",
+        "╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝   └───────────────────────────────┘",
+        ""
+    },
+  },
+}</code></pre>
+                
+                <h4>Configuration Update Logic:</h4>
+                <pre><code>M.values = vim.deepcopy(M.defaults)
+
+function M.update(opts)
+  M.values = vim.tbl_deep_extend("force", M.defaults, opts)
+end</code></pre>
+                
+                <p>
+                    The config module uses <code>vim.tbl_deep_extend</code> to perform a deep merge of user options with defaults, 
+                    allowing users to override only specific settings while keeping the rest at their default values.
+                </p>
+            </div>
+            
+            <div class="module-card" id="ui-module">
+                <h3>ui.lua - Floating Window UI</h3>
+                <p>
+                    This module is responsible for creating and managing the floating window UI. It handles window creation, 
+                    positioning, sizing, and applies appropriate settings to make the Netrw interface look good.
+                </p>
+                
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Calculates window dimensions based on configuration</li>
+                    <li>Creates and configures the floating window</li>
+                    <li>Positions the window according to the user's preference</li>
+                    <li>Applies window-specific settings like line numbers</li>
+                    <li>Provides functions to open, close, and toggle the interface</li>
+                </ul>
+                
+                <h4>Window Dimensions Calculation:</h4>
+                <pre><code>function M.get_window_dimensions()
+  local width = math.floor(vim.o.columns * config.values.width)
+  local height = math.floor(vim.o.lines * config.values.height)
+  
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+  
+  if config.values.position == "left" then
+    col = 0
+  elseif config.values.position == "right" then
+    col = vim.o.columns - width
+  end
+  
+  return {
+    width = width,
+    height = height,
+    row = row,
+    col = col
+  }
+end</code></pre>
+                
+                <h4>Floating Window Creation:</h4>
+                <pre><code>function M.create_floating_window(directory)
+  local buf = vim.api.nvim_create_buf(false, true)
+  state.buf_id = buf
+  table.insert(state.netrw_bufs, buf)
+
+  local dim = M.get_window_dimensions()
+  
+  local win_opts = {
+    relative = "editor",
+    width = dim.width,
+    height = dim.height,
+    row = dim.row,
+    col = dim.col,
+    style = "minimal",
+    title = config.values.title,
+    title_pos = "center",
+  }
+  
+  if config.values.border then
+    win_opts.border = config.values.border_style
+  end
+  
+  local win = vim.api.nvim_open_win(buf, true, win_opts)
+  state.win_id = win
+  
+  -- Configure Netrw settings
+  vim.cmd("let g:netrw_banner = " .. (config.values.hide_banner and "0" or "1"))
+  vim.cmd("let g:netrw_liststyle = " .. config.values.liststyle)
+  vim.cmd("let g:netrw_winsize = " .. config.values.winsize)
+  
+  M.apply_window_settings(win)
+  
+  if directory then
+    state.current_dir = directory
+    vim.cmd("Explore " .. vim.fn.fnameescape(directory))
+  else
+    vim.cmd("Explore")
+    vim.defer_fn(function()
+      state.current_dir = state.get_netrw_directory()
+    end, 10)
+  end
+
+  -- Add custom banner with a slight delay
+  vim.defer_fn(function()
+    if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_win_is_valid(win) then
+      local banner = require('netria.banner')
+      banner.add_custom_banner(buf, win)
+      banner.create_banner_signs(buf)
+    end
+  end, 100)
+end</code></pre>
+                
+                <h4>Window Toggle Logic:</h4>
+                <pre><code>function M.toggle(directory)
+  if state.win_id and vim.api.nvim_win_is_valid(state.win_id) then
+    M.close()
+  else
+    local dir_to_use = directory or state.current_dir or vim.fn.getcwd()
+    M.open(dir_to_use)
+  end
+end</code></pre>
+                
+                <p>
+                    The UI module has sophisticated logic to create a floating window with the right size and position.
+                    It determines these based on the user's configuration and properly sets up the window with borders, title,
+                    and other visual enhancements.
+                </p>
+            </div>
+            
+            <div class="module-card" id="state-module">
+                <h3>state.lua - State Management</h3>
+                <p>
+                    This module manages the plugin's internal state, tracking things like the current window ID, buffer ID,
+                    and other runtime information needed across different parts of the plugin.
+                </p>
+                
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Maintains the plugin's internal state</li>
+                    <li>Tracks active Netrw windows and buffers</li>
+                    <li>Provides utility functions to check buffer types</li>
+                    <li>Tracks the current directory for restoration</li>
+                    <li>Manages initialization flags</li>
+                </ul>
+                
+                <h4>State Variables:</h4>
+                <pre><code>local M = {
+  win_id = nil,              -- ID of the floating window
+  buf_id = nil,              -- ID of the current Netrw buffer
+  current_dir = nil,         -- Current directory being displayed
+  netrw_bufs = {},           -- List of all Netrw buffers created by the plugin
+  initialized = false,       -- Whether the plugin has been initialized
+  last_opened_file = nil,    -- Last file opened from Netrw
+  started_with_dir = false,  -- Whether Neovim was started with a directory
+  original_buf = nil,        -- Buffer that was active before opening Netria
+  adding_banner = false,     -- Flag to prevent re-entrant banner adding
+  banner_buffers = {},       -- Buffers that have already had banners added
+}</code></pre>
+                
+                <h4>Utility Functions:</h4>
+                <pre><code>function M.is_netrw_buffer(buf_id)
+  if not buf_id then return false end
+  
+  if vim.tbl_contains(M.netrw_bufs, buf_id) then
+    return true
+  end
+  
+  local ft = vim.bo[buf_id].filetype
+  return ft == "netrw"
+end
+
+function M.get_netrw_directory()
+  local buf = vim.api.nvim_get_current_buf()
+  if M.is_netrw_buffer(buf) then
+    local success, dir = pcall(vim.api.nvim_buf_get_var, buf, "netrw_curdir")
+    if success then
+      return dir
+    end
+  end
+  return vim.fn.getcwd()
+end</code></pre>
+                
+                <p>
+                    The state module acts as a central store for shared information used by different components.
+                    It allows the plugin to track things like which buffer is being used for Netrw, what the current
+                    directory is, and whether certain operations are already in progress.
+                </p>
+            </div>
+            
+            <div class="module-card" id="banner-module">
+                <h3>banner.lua - Custom Banner</h3>
+                <p>
+                    This module handles the creation and maintenance of the custom ASCII art banner at the top of the Netrw
+                    window. It includes logic to center the banner and protect it from being removed during Netrw operations.
+                </p>
+                
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Adds the custom banner to Netrw buffers</li>
+                    <li>Centers the banner based on window width</li>
+                    <li>Creates special line number signs for banner lines</li>
+                    <li>Handles error cases and prevents re-entrancy issues</li>
+                </ul>
+                
+                <h4>Banner Addition Logic:</h4>
+                <pre><code>function M.add_custom_banner(buf_id, win_id)
+  -- Skip if banner is disabled or no art defined
+  if not config.values.banner.enabled or not config.values.banner.art or #config.values.banner.art == 0 then
+    return
+  end
+
+  if not win_id or not vim.api.nvim_win_is_valid(win_id) then
+    return
+  end
+
+  -- Prevent re-entrancy
+  if state.adding_banner then
+    return
+  end
+  state.adding_banner = true
+
+  -- Wrap all banner logic in pcall for safety
+  local ok, err = pcall(function()
+    -- Calculate banner centering
+    local available_width = vim.api.nvim_win_get_width(win_id)
+    if config.values.border then
+      available_width = available_width - 2
+    end
+
+    local centered_banner = {}
+    for _, line in ipairs(config.values.banner.art) do
+      local line_length = vim.fn.strdisplaywidth(line)
+      local padding = math.max(0, math.floor((available_width - line_length) / 2))
+      table.insert(centered_banner, string.rep(' ', padding) .. line)
+    end
+
+    -- Check if buffer already has the banner
+    local current_lines = vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)
+    local has_banner = false
+
+    if #current_lines >= #centered_banner then
+      has_banner = true
+      for i, line in ipairs(centered_banner) do
+        if current_lines[i] ~= line then
+          has_banner = false
+          break
+        end
+      end
+    end
+
+    -- Add banner if it's not already there
+    if not has_banner then
+      -- Make buffer modifiable temporarily
+      local was_modifiable = vim.bo[buf_id].modifiable
+      local was_readonly = vim.bo[buf_id].readonly
+      
+      vim.bo[buf_id].modifiable = true
+      vim.bo[buf_id].readonly = false
+
+      -- Add banner at the top
+      local new_lines = vim.list_extend(vim.deepcopy(centered_banner), current_lines)
+      vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, new_lines)
+      vim.bo[buf_id].modified = false
+
+      -- Restore buffer flags
+      vim.bo[buf_id].modifiable = was_modifiable
+      vim.bo[buf_id].readonly = was_readonly
+
+      -- Position cursor after the banner
+      if #centered_banner > 0 then
+        local target_line = #centered_banner + 1
+        local line_count = vim.api.nvim_buf_line_count(buf_id)
+        
+        if target_line <= line_count then
+          vim.api.nvim_win_set_cursor(win_id, {target_line, 0})
+        end
+      end
+
+      state.banner_buffers[buf_id] = true
+    end
+  end)
+
+  -- Always reset the banner flag
+  state.adding_banner = false
+
+  -- Handle errors
+  if not ok then
+    vim.notify("Banner Error: " .. tostring(err), vim.log.levels.ERROR)
+  end
+end</code></pre>
+                
+                <h4>Banner Line Number Handling:</h4>
+                <pre><code>function M.create_banner_signs(buf_id)
+  if config.values.banner.enabled and #config.values.banner.art > 0 then
+    for i = 1, #config.values.banner.art do
+      vim.fn.sign_define("BannerLine" .. i, { text = " ", texthl = "LineNr" })
+      vim.fn.sign_place(i, "BannerSigns", "BannerLine" .. i, buf_id, { lnum = i })
+    end
+  end
+end</code></pre>
+                
+                <p>
+                    The banner module uses sophisticated techniques to ensure the banner is properly displayed and maintained
+                    even when Netrw refreshes the buffer. It temporarily makes the buffer modifiable to insert the banner,
+                    then restores the original settings. It also creates special signs to handle line numbers in the banner area.
+                </p>
+            </div>
+            
+            <div class="module-card" id="netrw-module">
+                <h3>netrw.lua - Netrw Integration</h3>
+                <p>
+                    This module handles the integration with Netrw, setting up hooks to interact with Netrw events
+                    and handling directory arguments when Neovim is started with a directory.
+                </p>
+                
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Sets up hooks to interact with Netrw events</li>
+                    <li>Detects directory arguments when Neovim is started</li>
+                    <li>Keeps track of the current directory in Netrw</li>
+                </ul>
+                
+                <h4>Netrw Hooks Setup:</h4>
+                <pre><code>function M.setup_hooks()
+  -- Create a global function to update the current directory
+  _G.Netria_UpdateCurrentDir = function()
+    local cur_buf = vim.api.nvim_get_current_buf()
+    if state.is_netrw_buffer(cur_buf) then
+      state.current_dir = state.get_netrw_directory()
+      
+      if state.win_id and vim.api.nvim_win_is_valid(state.win_id) and 
+         vim.api.nvim_win_get_buf(state.win_id) == cur_buf then
+        vim.defer_fn(function()
+          if vim.api.nvim_buf_is_valid(cur_buf) then
+            banner.add_custom_banner(cur_buf, state.win_id)
+          end
+        end, 30)
+      end
+    end
+  end
+  
+  -- Create an autocmd to hook into Netrw's directory change event
+  vim.cmd([[
+    augroup NetriaNetrwHook
+      autocmd!
+      autocmd User NetrwBrowseChgDir call v:lua.Netria_UpdateCurrentDir()
+    augroup END
+  ]])
+  
+  -- Set up a refresh hook to handle Netrw's refresh
+  vim.cmd([[
+    function! NetriaNetrwRefreshHook()
+      doautocmd User NetrwRefresh
+    endfunction
+
+    let g:Netrw_funcref = function('NetriaNetrwRefreshHook')
+  ]])
+  
+  -- Configure basic Netrw settings
+  vim.g.netrw_keepdir = 1
+  vim.g.netrw_browse_split = 0
+  vim.g.netrw_altv = 1
+  vim.g.netrw_winsize = 25
+end</code></pre>
+                
+                <h4>Directory Argument Handling:</h4>
+                <pre><code>function M.handle_directory_args()
+  local args = vim.fn.argv()
+  if #args > 0 then
+    local stat = vim.loop.fs_stat(args[1])
+    if stat and stat.type == "directory" then
+      state.started_with_dir = true
+      state.original_buf = vim.api.nvim_get_current_buf()
+      state.current_dir = vim.fn.fnamemodify(args[1], ":p")
+      
+      vim.cmd("silent! bwipeout!")
+      
+      return true
+    end
+  end
+  return false
+end</code></pre>
+                
+                <p>
+                    The netrw module serves as the bridge between Netria and Netrw. It hooks into Netrw's events to
+                    detect directory changes and refresh operations, ensuring that Netria's enhancements (like the custom banner)
+                    are preserved. It also detects when Neovim is started with a directory argument, which triggers
+                    Netria to open automatically.
+                </p>
+            </div>
+            
+            <div class="module-card" id="commands-module">
+                <h3>commands.lua - User Commands</h3>
+                <p>
+                    This module registers user commands for controlling the plugin. It creates the Vim commands that users
+                    can type to interact with Netria, such as <code>:NetriaOpen</code> and <code>:NetriaToggle</code>.
+                </p>
+                
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Registers user commands for interacting with Netria</li>
+                    <li>Handles command arguments for directory paths</li>
+                    <li>Applies number settings to file windows if configured</li>
+                </ul>
+                
+                <h4>Commands Registration Logic:</h4>
+                <pre><code>function M.setup(api)
+  api = api or ui
+  
+  vim.api.nvim_create_user_command("NetriaOpen", function(cmd_opts)
+    local dir = cmd_opts.args ~= "" and cmd_opts.args or nil
+    api.open(dir)
+  end, {nargs = "?"})
+  
+  vim.api.nvim_create_user_command("NetriaClose", api.close, {})
+  
+  vim.api.nvim_create_user_command("NetriaToggle", function(cmd_opts)
+    local dir = cmd_opts.args ~= "" and cmd_opts.args or nil
+    api.toggle(dir)
+  end, {nargs = "?"})
+  
+  vim.api.nvim_create_user_command("NetriaQuit", function()
+    vim.cmd("qa")
+  end, {})
+  
+  vim.api.nvim_create_user_command("NetriaRefresh", function()
+    if state.win_id and vim.api.nvim_win_is_valid(state.win_id) then
+      local buf = vim.api.nvim_win_get_buf(state.win_id)
+      if state.is_netrw_buffer(buf) then
+        local banner = require('netria.banner')
+        banner.add_custom_banner(buf, state.win_id)
+      end
+    end
+  end, {})</code></pre>
+                
+                <h4>Number Settings Application:</h4>
+                <pre><code>  if config.values.apply_numbers_to_files then
+    for _, win_id in ipairs(vim.api.nvim_list_wins()) do
+      local buf_id = vim.api.nvim_win_get_buf(win_id)
+      if not state.is_netrw_buffer(buf_id) then
+        if config.values.show_line_numbers then
+          vim.wo[win_id].number = true
+        end
+        
+        if config.values.show_relative_numbers then
+          vim.wo[win_id].relativenumber = true
+        end
+      end
+    end
+  end</code></pre>
+                
+                <p>
+                    The commands module creates a clean interface for users to interact with Netria. The user commands
+                    like <code>:NetriaOpen</code> and <code>:NetriaToggle</code> provide a familiar Vim-like way to
+                    control the plugin. Additionally, it can apply line number settings to all file windows if the
+                    user has configured that option.
+                </p>
+            </div>
+            
+            <div class="module-card" id="events-module">
+                <h3>events.lua - Event Handling</h3>
+                <p>
+                    This module sets up event handlers for various Neovim events to maintain the plugin's state and appearance
+                    during user interactions. It's the largest and most complex module in the plugin.
+                </p>
+                
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Sets up autocmds for various Neovim events</li>
+                    <li>Handles buffer, window, and file events</li>
+                    <li>Ensures the banner is maintained when Netrw updates</li>
+                    <li>Manages plugin behavior when switching between windows</li>
+                    <li>Cleans up resources when buffers are deleted</li>
+                </ul>
+                
+                <p>
+                    The events module is quite complex and extensive. It includes handlers for events like buffer enter/leave,
+                    window focus change, file type change, and more. These event handlers work together to maintain the plugin's
+                    state and ensure the enhancements (like the custom banner) persist through various user actions.
+                </p>
+                
+                <p>
+                    This module serves as the "glue" that holds the plugin together, ensuring that all components work harmoniously
+                    as the user interacts with Neovim. It responds to events and triggers the appropriate actions in other modules.
+                </p>
+            </div>
+        </section>
+        
+        <section id="code-flow" class="section">
+            <h2>Code Flow Examples</h2>
+            <p>
+                To better understand how Netria works, let's walk through some common scenarios and trace the code flow.
+            </p>
+            
+            <div class="module-card">
+                <h3>Opening Netria for the First Time</h3>
+                <ol>
+                    <li>User calls <code>require('netria').setup({})</code> in their config file
+                    <ul>
+                        <li><code>init.lua</code> loads all dependencies</li>
+                        <li><code>config.lua</code> merges user options with defaults</li>
+                        <li><code>state.lua</code> initializes the state variables</li>
+                        <li><code>netrw.lua</code> sets up Netrw hooks</li>
+                        <li><code>commands.lua</code> registers user commands</li>
+                        <li><code>events.lua</code> sets up event handlers</li>
+                    </ul>
+                    </li>
+                    <li>User types <code>:NetriaOpen</code> or uses a keymap
+                    <ul>
+                        <li><code>commands.lua</code> handler calls <code>api.open()</code></li>
+                        <li><code>ui.lua</code> creates a floating window</li>
+                        <li><code>ui.lua</code> runs the Netrw command in the window</li>
+                        <li><code>banner.lua</code> adds the custom banner after a short delay</li>
+                        <li><code>state.lua</code> stores window and buffer IDs</li>
+                    </ul>
+                    </li>
+                </ol>
+            </div>
+            
+            <div class="module-card">
+                <h3>Navigating Directories in Netria</h3>
+                <ol>
+                    <li>User presses <code>Enter</code> on a directory in Netrw
+                    <ul>
+                        <li>Netrw changes to that directory</li>
+                        <li>Netrw fires the <code>NetrwBrowseChgDir</code> event</li>
+                        <li><code>netrw.lua</code> hooks into this event via <code>_G.Netria_UpdateCurrentDir</code></li>
+                        <li><code>state.lua</code> updates the current directory information</li>
+                        <li><code>banner.lua</code> re-adds the custom banner to the updated buffer</li>
+                    </ul>
+                    </li>
+                </ol>
+            </div>
+            
+            <div class="module-card">
+                <h3>Opening a File from Netria</h3>
+                <ol>
+                    <li>User presses <code>Enter</code> on a file in Netrw
+                    <ul>
+                        <li>Netrw opens the file in a new buffer</li>
+                        <li><code>events.lua</code> detects the buffer change via <code>BufEnter</code> event</li>
+                        <li>If configured, line number settings are applied to the file buffer</li>
+                        <li>The floating window stays open, allowing quick navigation back</li>
+                    </ul>
+                    </li>
+                </ol>
+            </div>
+            
+            <div class="module-card">
+                <h3>Toggling Netria Visibility</h3>
+                <ol>
+                    <li>User calls <code>:NetriaToggle</code> or uses a keymap
+                    <ul>
+                        <li><code>commands.lua</code> handler calls <code>api.toggle()</code></li>
+                        <li><code>ui.lua</code> checks if the window exists and is valid</li>
+                        <li>If window exists: <code>ui.close()</code> closes the window</li>
+                        <li>If window doesn't exist: <code>ui.open()</code> creates a new one</li>
+                        <li><code>state.lua</code> updates window and buffer tracking</li>
+                    </ul>
+                    </li>
+                </ol>
+            </div>
+            
+            <div class="note">
+                <p><strong>Note:</strong> Netria's modular design makes it easy to understand how components interact. Each module has a clear responsibility, and the connections between modules are well-defined.</p>
+            </div>
+        </section>
+        
+        <section id="customization" class="section">
+            <h2>Customization Reference</h2>
+            <p>
+                Understanding Netria's code structure makes it easier to customize the plugin to your needs. Here are some common customization points:
+            </p>
+            
+            <div class="module-card">
+                <h3>Adding New Commands</h3>
+                <p>To add a new command to Netria, you would add it to the <code>commands.lua</code> module:</p>
+                
+                <pre><code>-- In commands.lua
+vim.api.nvim_create_user_command("NetriaMyCommand", function(cmd_opts)
+  -- Your command implementation
+end, {nargs = "?"})</code></pre>
+            </div>
+            
+            <div class="module-card">
+                <h3>Changing the Banner</h3>
+                <p>To customize the banner, you would modify the configuration in your Neovim config:</p>
+                
+                <pre><code>require('netria').setup({
+  banner = {
+    enabled = true,
+    art = {
+      "   ╔═════════════════════════╗",
+      "   ║     Custom Banner       ║",
+      "   ╚═════════════════════════╝",
+    }
+  }
+})</code></pre>
+            </div>
+            
+            <div class="module-card">
+                <h3>Modifying Window Appearance</h3>
+                <p>To change the window appearance, you would adjust the UI-related settings:</p>
+                
+                <pre><code>require('netria').setup({
+  position = "right",    -- Change window position
+  width = 0.5,           -- Change window width
+  height = 0.7,          -- Change window height
+  border_style = "double" -- Change border style
+})</code></pre>
+            </div>
+            
+            <div class="tip">
+                <p><strong>Tip:</strong> By understanding the code structure and module interactions, you can create more advanced customizations or even extend Netria with new functionality.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                Netria is open source software. Visit the 
+                <a href="https://github.com/Mirhajian/netria" target="_blank">GitHub repository</a> 
+                to contribute or report issues.
+            </p>
+            <p>
+                Created by <a href="https://github.com/Mirhajian" target="_blank">Abolfazl Mirhajian</a>
+            </p>
+            <p>
+                Licensed under the MIT License - see the 
+                <a href="https://github.com/Mirhajian/netria/blob/main/LICENSE" target="_blank">LICENSE</a> 
+                file for details.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        // Menu toggle functionality
+        const menuIcon = document.querySelector('.menu-icon');
+        const menuClose = document.querySelector('.menu-close');
+        const slidingMenu = document.querySelector('.sliding-menu');
+        const menuOverlay = document.querySelector('.menu-overlay');
+
+        menuIcon.addEventListener('click', () => {
+            slidingMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        });
+
+        menuClose.addEventListener('click', () => {
+            slidingMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+        });
+
+        menuOverlay.addEventListener('click', () => {
+            slidingMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.sliding-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                slidingMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId.includes('#')) {
+                    const hashIndex = targetId.indexOf('#');
+                    const hash = targetId.substring(hashIndex);
+                    if (targetId.startsWith('#')) {
+                        const targetElement = document.querySelector(hash);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    } else {
+                        window.location.href = targetId;
+                    }
+                } else {
+                    window.location.href = targetId;
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

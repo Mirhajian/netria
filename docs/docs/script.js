@@ -5,11 +5,6 @@ const observerOptions = {
     threshold: 0.1
 };
 
-// Make all sections visible by default
-document.querySelectorAll('.section').forEach(section => {
-    section.classList.add('visible');
-});
-
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {

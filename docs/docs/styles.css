@@ -469,10 +469,10 @@
   /* Sections */
   .section {
     margin-bottom: 3rem;
-    padding: 1rem 0;
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    scroll-margin-top: 60px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
   }
   
   .section.visible {
@@ -589,13 +589,10 @@
   .feature-card,
   .module-card {
     background-color: var(--card-bg-color);
-    border-radius: 8px;
+    border-radius: 5px;
     padding: 1.5rem;
-    margin-bottom: 2rem;
-    transition: all 0.3s ease;
-    position: relative;
     border: 1px solid var(--border-color);
-    opacity: 1;
+    transition: all 0.3s ease;
   }
   
   .feature-card {
