@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netria - A Modern Floating UI for Netrw in Neovim | Documentation</title>
+    <meta name="description" content="Comprehensive documentation for Netria, a clean, modern floating UI for Netrw in Neovim that enhances the built-in file explorer without dependencies.">
+    <meta name="keywords" content="Neovim, Netrw, Netria, file explorer, Vim plugin, floating UI, Lua plugin">
+    <meta name="author" content="Abolfazl Mirhajian">
+    
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Netria - A Modern Floating UI for Netrw in Neovim">
+    <meta property="og:description" content="Transform Netrw into a beautiful floating window with Netria, a lightweight Neovim plugin.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/Mirhajian/netria">
+    
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Netria - A Modern Floating UI for Netrw in Neovim">
+    <meta name="twitter:description" content="Transform Netrw into a beautiful floating window with Netria, a lightweight Neovim plugin.">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Additional styles for new features -->
+    <style>
+        :root {
+            --primary-color: #57A143;
+            --secondary-color: #3a6e2d;
+            --accent-color: #FFD700;
+            --text-color: #333;
+            --background-color: #ffffff;
+            --code-bg-color: #f5f5f5;
+            --card-bg-color: #f9f9f9;
+            --header-bg-color: #2b2b2b;
+            --border-color: #e1e1e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            background-color: var(--header-bg-color);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header .subtitle {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        header .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        header .buttons a {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        header .buttons a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        header .buttons a.secondary {
+            background-color: #555;
+        }
+
+        header .buttons a.secondary:hover {
+            background-color: #444;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-icon {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+
+        .menu-icon:hover {
+            background: rgba(87, 161, 67, 0.1);
+        }
+
+        .menu-icon:hover svg {
+            stroke: var(--primary-color);
+        }
+
+        .sliding-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: auto;
+            min-width: 250px;
+            height: auto;
+            background: linear-gradient(to right, rgba(26, 26, 26, 0.65), rgba(26, 26, 26, 0.55));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            margin: 1rem;
+        }
+
+        .sliding-menu.active {
+            transform: translateX(300px);
+        }
+
+        .sliding-menu ul {
+            list-style: none;
+            padding: 1rem 0;
+            margin: 0;
+        }
+
+        .sliding-menu ul li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .sliding-menu ul li a {
+            display: block;
+            padding: 0.8rem 2rem;
+            color: rgba(255, 255, 255, 0.95);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sliding-menu ul li a:hover {
+            background: rgba(87, 161, 67, 0.2);
+            border-left-color: var(--primary-color);
+            padding-left: 2.5rem;
+            color: white;
+        }
+
+        .menu-close {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-close svg {
+            width: 16px;
+            height: 16px;
+            stroke: white;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+
+        .menu-close:hover svg {
+            stroke: var(--primary-color);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 1rem 0;
+            margin: 0;
+            flex: 1;
+        }
+
+        nav ul li {
+            margin: 0 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .github-profile {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .github-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .github-profile:hover img {
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .github-profile:hover {
+            background: rgba(87, 161, 67, 0.1);
+        }
+
+        .ascii-banner {
+            background-color: #1e1e1e;
+            color: #78e084;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            overflow-x: auto;
+            white-space: pre;
+            font-family: monospace;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 60px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--secondary-color);
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            margin: 1.2rem 0 0.8rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            background-color: var(--code-bg-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            background-color: var(--code-bg-color);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.9rem;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--card-bg-color);
+            border-radius: 5px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .screenshot-container {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .screenshot-container h4 {
+            background-color: var(--code-bg-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            margin: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .screenshot-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--code-bg-color);
+            color: var(--text-color);
+        }
+
+        .module-card {
+            background-color: var(--card-bg-color);
+            border-radius: 5px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .note {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tip {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            background-color: var(--header-bg-color);
+            color: white;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .feature-list, .screenshots {
+                grid-template-columns: 1fr;
+            }
+            
+            .ascii-banner {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Copy button styles */
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        pre:hover .copy-button {
+            opacity: 1;
+        }
+        
+        /* Theme toggle button styles */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* Mobile menu styles */
+        .mobile-menu-button {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-button {
+                display: block;
+            }
+            
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+        }
+        
+        /* Dark mode styles */
+        body.dark-mode {
+            --text-color: #e0e0e0;
+            --background-color: #1a1a1a;
+            --code-bg-color: #2d2d2d;
+            --card-bg-color: #2d2d2d;
+            --header-bg-color: #000000;
+            --border-color: #404040;
+        }
+        
+        body.dark-mode pre {
+            background-color: #2d2d2d;
+        }
+        
+        body.dark-mode .feature-card,
+        body.dark-mode .module-card {
+            background-color: #2d2d2d;
+            border-color: #404040;
+        }
+        
+        body.dark-mode th {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .note {
+            background-color: rgba(87, 161, 67, 0.1);
+            border-left: 4px solid var(--primary-color);
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .tip {
+            background-color: rgba(23, 162, 184, 0.1);
+            border-left: 4px solid #17a2b8;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .screenshot-container h4 {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            border-bottom-color: #404040;
+        }
+        
+        /* Loading animation */
+        body {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        body.loaded {
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2b2b2b 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(87, 161, 67, 0.3) 0%, transparent 65%);
+            animation: pulse 5.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.65; }
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding-top: 8rem;
+        }
+
+        .hero-title {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero-subtitle {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+        }
+
+        .hero-button {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        .hero-button.primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .hero-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .hero-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .hero-button:hover::before {
+            left: 100%;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-button.primary:hover {
+            background: var(--secondary-color);
+        }
+
+        .hero-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ASCII Art Animation */
+        .ascii-art {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            white-space: pre;
+            font-size: 1.2rem;
+            line-height: 1.4;
+            color: var(--primary-color);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            transform: translateY(4rem);
+        }
+
+        @keyframes typewriter {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--primary-color);
+            animation: typewriter 3.5s steps(40, end),
+                       blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-color) }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="menu-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 12h18M3 6h18M3 18h18"/>
+                </svg>
+            </div>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#usage">Usage</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#customization">Customization</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <a href="https://github.com/Mirhajian" target="_blank" rel="noopener noreferrer" class="github-profile" onclick="event.preventDefault(); window.open(this.href, '_blank');">
+                <img src="https://github.com/Mirhajian.png" alt="Abolfazl Mirhajian's GitHub Profile">
+            </a>
+        </div>
+    </nav>
+
+    <div class="menu-overlay"></div>
+    <div class="sliding-menu">
+        <div class="menu-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </div>
+        <ul>
+            <li><a href="https://github.com/Mirhajian" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+                </svg>
+                GitHub Profile
+            </a></li>
+            <li><a href="https://github.com/Mirhajian/netria/pulls" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M18 15v3a3 3 0 01-3 3H5a3 3 0 01-3-3V9a3 3 0 013-3h3m9 6l-3-3m0 0l-3 3m3-3V9"/>
+                </svg>
+                Netria Pull Requests
+            </a></li>
+            <li><a href="https://github.com/Mirhajian/netria/issues" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Netria Issues
+            </a></li>
+            <li><a href="https://mirhajian.github.io" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                Other Projects
+            </a></li>
+            <li><a href="https://github.com/Mirhajian/netria/archive/refs/heads/main.zip" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                Download Netria
+            </a></li>
+            <li><a href="https://github.com/Mirhajian/netria/blob/main/CONTRIBUTING.md" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                Contributing Guide
+            </a></li>
+            <li><a href="https://github.com/Mirhajian/netria/blob/main/CHANGELOG.md" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Changelog
+            </a></li>
+        </ul>
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="ascii-art">
+███╗   ██╗███████╗████████╗██████╗ ██╗ █████╗
+████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║██╔══██╗
+██╔██╗ ██║█████╗     ██║   ██████╔╝██║███████║
+██║╚██╗██║██╔══╝     ██║   ██╔══██╗██║██╔══██║
+██║ ╚████║███████╗   ██║   ██║  ██║██║██║  ██║
+╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝
+            </div>
+            <h1 class="hero-title typewriter">NETRIA</h1>
+            <div class="hero-subtitle">A clean, modern floating UI for Netrw in Neovim</div>
+            <div class="hero-buttons">
+                <a href="https://github.com/Mirhajian/netria" target="_blank" class="hero-button primary">GitHub Repository</a>
+                <a href="#installation" class="hero-button secondary">Installation Guide</a>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="ascii-banner">███╗   ██╗███████╗████████╗██████╗ ██╗ █████╗    ┌───────────────────────────────┐
+████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║██╔══██╗   │ Netria - A Nice Looking Netrw │
+██╔██╗ ██║█████╗     ██║   ██████╔╝██║███████║   │ Version: 1.0.0                │
+██║╚██╗██║██╔══╝     ██║   ██╔══██╗██║██╔══██║   │ :Netria - Open Explorer       │
+██║ ╚████║███████╗   ██║   ██║  ██║██║██║  ██║   │ :NetriaToggle - Toggle Nerria │
+╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝   └───────────────────────────────┘</div>
+
+        <section id="overview" class="section">
+            <h2>Overview</h2>
+            <p>
+                Netria is a lightweight Neovim plugin that transforms the built-in Netrw file explorer into a beautiful, 
+                modern floating window. It enhances the user experience without replacing Netrw's functionality, 
+                making it perfect for users who want to improve their workflow while maintaining compatibility 
+                with Neovim's native tools.
+            </p>
+            <p>
+                Unlike other file explorer replacements that require learning new keybindings and workflows, 
+                Netria works with your existing Netrw knowledge, simply adding visual improvements and quality-of-life 
+                features that make file navigation more pleasant.
+            </p>
+            
+            <div class="screenshots">
+                <div class="screenshot-container">
+                    <h4>Standard Netrw (Before)</h4>
+                    <img src="https://github.com/Mirhajian/netria/raw/main/assets/before.png" alt="Standard Netrw interface before Netria" />
+                </div>
+                <div class="screenshot-container">
+                    <h4>With Netria (After)</h4>
+                    <img src="https://github.com/Mirhajian/netria/raw/main/assets/after.png" alt="Enhanced Netrw interface with Netria" />
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section">
+            <h2>Features</h2>
+            <div class="feature-list">
+                <div class="feature-card">
+                    <h3>Floating Window UI</h3>
+                    <p>Transforms Netrw into a beautiful floating window with customizable size, position, and border styles.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Custom Banner</h3>
+                    <p>Adds a stylish ASCII art banner to the top of Netrw that can be customized or disabled.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Familiar Keybindings</h3>
+                    <p>Works with all your existing Netrw keybindings, so there's no new workflow to learn.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Zero Dependencies</h3>
+                    <p>Relies only on Neovim's built-in Netrw, with no external dependencies required.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Highly Configurable</h3>
+                    <p>Customizable appearance, behavior, and integration with your existing Neovim setup.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Lightweight</h3>
+                    <p>Focused on enhancing what's already there without unnecessary bloat.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation" class="section">
+            <h2>Installation</h2>
+            <p>
+                Netria can be installed using your favorite Neovim plugin manager. Choose the method that works best
+                for your setup:
+            </p>
+
+            <h3>Using lazy.nvim</h3>
+            <pre><code>-- In your lazy.nvim configuration
+{
+  "mirhajian/netria",
+  config = function()
+    require("netria").setup({
+      -- optional configuration here
+    })
+  end,
+}</code></pre>
+
+            <h3>Using packer.nvim</h3>
+            <pre><code>-- In your packer.nvim configuration
+use {
+  "mirhajian/netria",
+  config = function()
+    require("netria").setup({})
+  end
+}</code></pre>
+
+            <h3>Using vim-plug</h3>
+            <pre><code>" In your vim-plug configuration
+Plug 'mirhajian/netria'
+
+" In your init.vim after plug#end()
+lua require('netria').setup({})</code></pre>
+
+            <div class="note">
+                <p><strong>Note:</strong> Netria works with Neovim's built-in Netrw file explorer. There's no need to install any additional dependencies.</p>
+            </div>
+        </section>
+
+        <section id="usage" class="section">
+            <h2>Usage</h2>
+            <p>
+                Once installed, Netria provides several commands to interact with the enhanced Netrw interface:
+            </p>
+
+            <h3>Commands</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Command</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>:NetriaOpen [path]</code></td>
+                        <td>Open Netria (optionally at the specified path)</td>
+                    </tr>
+                    <tr>
+                        <td><code>:NetriaClose</code></td>
+                        <td>Close the Netria window</td>
+                    </tr>
+                    <tr>
+                        <td><code>:NetriaToggle [path]</code></td>
+                        <td>Toggle Netria visibility (optionally at the specified path)</td>
+                    </tr>
+                    <tr>
+                        <td><code>:NetriaRefresh</code></td>
+                        <td>Refresh the current view</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Recommended Keymapping</h3>
+            <p>
+                For convenient access, it's recommended to set up a keymapping to toggle Netria:
+            </p>
+            <pre><code>-- Add this to your Neovim configuration
+vim.keymap.set('n', '&lt;leader&gt;e', require('netria').toggle, { desc = "Toggle Netria" })</code></pre>
+
+            <h3>Standard Netrw Keybindings</h3>
+            <p>
+                One of Netria's strengths is that it preserves all standard Netrw keybindings, so you can use the
+                same keys you're already familiar with:
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&lt;CR&gt;</code></td>
+                        <td>Open file/directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>d</code></td>
+                        <td>Create directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>%</code></td>
+                        <td>Create file</td>
+                    </tr>
+                    <tr>
+                        <td><code>D</code></td>
+                        <td>Delete file/directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>R</code></td>
+                        <td>Rename file/directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>i</code></td>
+                        <td>Change list style</td>
+                    </tr>
+                    <tr>
+                        <td><code>-</code></td>
+                        <td>Go up one directory</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="tip">
+                <p><strong>Tip:</strong> If you're new to Netrw, you can view all available commands by typing <code>:help netrw-quickmap</code> in Neovim.</p>
+            </div>
+        </section>
+
+        <section id="configuration" class="section">
+            <h2>Configuration</h2>
+            <p>
+                Netria works out of the box, but you can customize various aspects of its behavior and appearance.
+                Here's a complete configuration example with explanations:
+            </p>
+
+            <pre><code>-- Disable netrw's automatic directory handling (recommended)
+vim.g.netrw_keepdir = 1
+
+-- Configure Netria with full options
+require('netria').setup({
+  -- Window appearance
+  title = " Netria ",           -- Window title
+  position = "center",          -- Window position: "center", "left", or "right"
+  centered = true,              -- Center the window
+  width = 0.7,                  -- Width as percentage of screen (0.0-1.0)
+  height = 0.8,                 -- Height as percentage of screen (0.0-1.0)
+  
+  -- Border options
+  border = true,                -- Enable border around netrw
+  border_style = "rounded",     -- Border style: "none", "single", "double", "rounded", "solid", "shadow"
+  
+  -- Netrw settings
+  hide_banner = true,           -- Hide the default netrw banner
+  liststyle = 3,                -- Tree style listing (0-3)
+  winsize = 0,                  -- Let our plugin handle sizing
+  show_line_numbers = true,     -- Show line numbers
+  show_relative_numbers = true, -- Show relative line numbers
+  no_modify = true,             -- No modifications allowed in netrw buffer
+  readonly = true,              -- Read-only mode
+  no_wrap = true,               -- No text wrapping
+
+  -- Apply number settings to opened files
+  apply_numbers_to_files = true, -- Apply number settings to opened file windows
+
+  -- Custom banner
+  banner = {
+    enabled = true,             -- Enable the custom banner
+    art = {                     -- ASCII art for the banner
+        "",
+        "███╗   ██╗███████╗████████╗██████╗ ██╗ █████╗    ┌───────────────────────────────┐",
+        "████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║██╔══██╗   │ Netria - A Nice Looking Netrw │",
+        "██╔██╗ ██║█████╗     ██║   ██████╔╝██║███████║   │ Version: 1.0.0                │",
+        "██║╚██╗██║██╔══╝     ██║   ██╔══██╗██║██╔══██║   │ :Netria - Open Explorer       │",
+        "██║ ╚████║███████╗   ██║   ██║  ██║██║██║  ██║   │ :NetriaToggle - Toggle Nerria │",
+        "╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝   └───────────────────────────────┘",
+        ""
+    },
+  },
+})</code></pre>
+
+            <h3>Configuration Options Explained</h3>
+            
+            <div class="module-card">
+                <h3>Window Settings</h3>
+                <ul>
+                    <li><code>title</code>: The title displayed in the window border (if borders are enabled)</li>
+                    <li><code>position</code>: Where the window should appear ("center", "left", or "right")</li>
+                    <li><code>centered</code>: Whether to center the window vertically</li>
+                    <li><code>width</code>: Window width as a percentage of screen width (0.0-1.0)</li>
+                    <li><code>height</code>: Window height as a percentage of screen height (0.0-1.0)</li>
+                </ul>
+            </div>
+            
+            <div class="module-card">
+                <h3>Border Settings</h3>
+                <ul>
+                    <li><code>border</code>: Enable/disable window border</li>
+                    <li><code>border_style</code>: Style of the border - "none", "single", "double", "rounded", "solid", or "shadow"</li>
+                </ul>
+            </div>
+            
+            <div class="module-card">
+                <h3>Netrw Display Settings</h3>
+                <ul>
+                    <li><code>hide_banner</code>: Hide Netrw's default banner</li>
+                    <li><code>liststyle</code>: Netrw list style (0: thin, 1: long, 2: wide, 3: tree)</li>
+                    <li><code>winsize</code>: Set to 0 to let Netria handle window sizing</li>
+                    <li><code>show_line_numbers</code>: Show line numbers in Netrw</li>
+                    <li><code>show_relative_numbers</code>: Show relative line numbers in Netrw</li>
+                    <li><code>no_modify</code>: Prevent modifications to the Netrw buffer</li>
+                    <li><code>readonly</code>: Set the buffer to read-only mode</li>
+                    <li><code>no_wrap</code>: Disable text wrapping in Netrw</li>
+                </ul>
+            </div>
+            
+            <div class="module-card">
+                <h3>Banner Settings</h3>
+                <ul>
+                    <li><code>banner.enabled</code>: Enable/disable the custom banner</li>
+                    <li><code>banner.art</code>: Array of strings representing the banner ASCII art</li>
+                </ul>
+            </div>
+
+            <div class="note">
+                <p><strong>Note:</strong> If you modify the banner, ensure that the ASCII art fits within the window width. For narrow windows, consider using a simpler banner design.</p>
+            </div>
+        </section>
+
+        <section id="architecture" class="section">
+            <h2>Architecture</h2>
+            <p>
+                Netria is structured in a modular way, making it easy to understand and extend. Here's an overview 
+                of the project's architecture and how the different components interact:
+            </p>
+
+            <h3>Module Structure</h3>
+            <p>The plugin is organized into several Lua modules, each with a specific responsibility:</p>
+
+            <div class="module-card">
+                <h3>lua/netria/init.lua</h3>
+                <p>
+                    The main entry point of the plugin. It exports the public API and initializes the plugin components. 
+                    This is what you interact with when you call <code>require('netria').setup({})</code>.
+                </p>
+                <p>Key responsibilities:</p>
+                <ul>
+                    <li>Exports public methods (<code>open</code>, <code>close</code>, <code>toggle</code>)</li>
+                    <li>Initializes all plugin components</li>
+                    <li>Handles directory arguments when Neovim is started with a directory</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <h3>lua/netria/config.lua</h3>
+                <p>
+                    Manages configuration settings for the plugin. It defines default values and provides functions
+                    to update them with user-provided settings.
+                </p>
+                <p>Key responsibilities:</p>
+                <ul>
+                    <li>Defines default configuration values</li>
+                    <li>Merges user configuration with defaults</li>
+                    <li>Provides access to the configuration throughout the plugin</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <h3>lua/netria/ui.lua</h3>
+                <p>
+                    Handles the creation and management of the floating window UI. This is where the floating window is 
+                    created, sized, and positioned according to the configuration.
+                </p>
+                <p>Key responsibilities:</p>
+                <ul>
+                    <li>Calculates window dimensions based on configuration</li>
+                    <li>Creates and configures the floating window</li>
+                    <li>Provides <code>open</code>, <code>close</code>, and <code>toggle</code> functions</li>
+                    <li>Applies window-specific settings</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <h3>lua/netria/state.lua</h3>
+                <p>
+                    Manages the plugin's internal state, tracking things like the current window ID, buffer ID, and 
+                    other runtime information.
+                </p>
+                <p>Key responsibilities:</p>
+                <ul>
+                    <li>Tracks active Netrw windows and buffers</li>
+                    <li>Provides utility functions for state checking</li>
+                    <li>Manages plugin initialization status</li>
+                    <li>Provides functions to query Netrw state (current directory, etc.)</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <h3>lua/netria/banner.lua</h3>
+                <p>
+                    Handles the creation and maintenance of the custom banner. It includes logic to center the banner
+                    and prevent it from being removed during Netrw operations.
+                </p>
+                <p>Key responsibilities:</p>
+                <ul>
+                    <li>Adds the custom banner to Netrw buffers</li>
+                    <li>Centers the banner based on window width</li>
+                    <li>Handles error cases and prevents re-entrancy issues</li>
+                    <li>Creates special line number signs for banner lines</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <h3>lua/netria/commands.lua</h3>
+                <p>
+                    Registers the Vim commands that users can use to interact with Netria, such as <code>:NetriaOpen</code>
+                    and <code>:NetriaToggle</code>.
+                </p>
+                <p>Key responsibilities:</p>
+                <ul>
+                    <li>Registers user commands for interacting with Netria</li>
+                    <li>Handles command arguments for directory paths</li>
+                    <li>Applies number settings to file windows if configured</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <h3>lua/netria/events.lua</h3>
+                <p>
+                    Sets up event handlers for various Neovim events to maintain the plugin's state and appearance
+                    during user interactions.
+                </p>
+                <p>Key responsibilities:</p>
+                <ul>
+                    <li>Sets up autocmds for various Neovim events</li>
+                    <li>Handles buffer, window, and file events</li>
+                    <li>Ensures the banner is maintained when Netrw updates</li>
+                    <li>Manages plugin behavior when switching between windows</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="customization" class="section">
+            <h2>Customization</h2>
+            <p>
+                Netria is designed to be highly customizable while maintaining a clean and consistent look. Here are
+                some examples of how you can customize the plugin to match your preferences:
+            </p>
+
+            <h3>Custom Banner</h3>
+            <p>
+                You can create your own ASCII art banner or use a different style:
+            </p>
+            <pre><code>require('netria').setup({
+  banner = {
+    enabled = true,
+    art = {
+      "",
+      "╔════════════════════════════════════════════════════════════════════════════╗",
+      "║                              Netria Explorer                              ║",
+      "╚════════════════════════════════════════════════════════════════════════════╝",
+      ""
+    }
+  }
+})</code></pre>
+
+            <h3>Window Position and Size</h3>
+            <p>
+                Adjust the window position and size to match your workflow:
+            </p>
+            <pre><code>require('netria').setup({
+  position = "right",    -- Open on the right side
+  width = 0.4,          -- Take up 40% of screen width
+  height = 0.9,         -- Take up 90% of screen height
+  centered = false      -- Don't center vertically
+})</code></pre>
+
+            <h3>Border Style</h3>
+            <p>
+                Choose from different border styles to match your theme:
+            </p>
+            <pre><code>require('netria').setup({
+  border = true,
+  border_style = "double"  -- Options: "none", "single", "double", "rounded", "solid", "shadow"
+})</code></pre>
+
+            <div class="tip">
+                <p><strong>Tip:</strong> You can combine different customization options to create a unique look that matches your Neovim setup.</p>
+            </div>
+        </section>
+
+        <section id="faq" class="section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="module-card">
+                <h3>Does Netria replace Netrw?</h3>
+                <p>
+                    No, Netria enhances Netrw rather than replacing it. It uses Netrw's core functionality but presents
+                    it in a more modern and visually appealing way through a floating window interface.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <h3>Do I need to learn new keybindings?</h3>
+                <p>
+                    No, Netria preserves all standard Netrw keybindings. You can continue using the same keys you're
+                    already familiar with. The only new commands are the Netria-specific ones for opening, closing,
+                    and toggling the explorer.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <h3>Is Netria compatible with other file explorers?</h3>
+                <p>
+                    Netria is specifically designed to work with Netrw. While it won't interfere with other file
+                    explorers, it's meant to enhance Netrw's functionality rather than replace it with a different
+                    file explorer.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <h3>Can I customize the appearance further?</h3>
+                <p>
+                    Yes! Netria offers extensive customization options through its configuration. You can modify the
+                    window appearance, banner, and various Netrw settings to match your preferences.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <h3>Does Netria work with Neovim's built-in LSP?</h3>
+                <p>
+                    Yes, Netria is fully compatible with Neovim's LSP features. It doesn't interfere with any LSP
+                    functionality and works alongside other plugins.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                Netria is open source software. Visit the 
+                <a href="https://github.com/Mirhajian/netria" target="_blank">GitHub repository</a> 
+                to contribute or report issues.
+            </p>
+            <p>
+                Created by <a href="https://github.com/Mirhajian" target="_blank">Abolfazl Mirhajian</a>
+            </p>
+            <p>
+                Licensed under the MIT License - see the 
+                <a href="https://github.com/Mirhajian/netria/blob/main/LICENSE" target="_blank">LICENSE</a> 
+                file for details.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        // Menu toggle functionality
+        const menuIcon = document.querySelector('.menu-icon');
+        const menuClose = document.querySelector('.menu-close');
+        const slidingMenu = document.querySelector('.sliding-menu');
+        const menuOverlay = document.querySelector('.menu-overlay');
+
+        menuIcon.addEventListener('click', () => {
+            slidingMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        });
+
+        menuClose.addEventListener('click', () => {
+            slidingMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+        });
+
+        menuOverlay.addEventListener('click', () => {
+            slidingMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.sliding-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                slidingMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,402 @@
+:root {
+    --primary-color: #57A143;
+    --secondary-color: #3a6e2d;
+    --accent-color: #FFD700;
+    --text-color: #333;
+    --background-color: #ffffff;
+    --code-bg-color: #f5f5f5;
+    --card-bg-color: #f9f9f9;
+    --header-bg-color: #2b2b2b;
+    --border-color: #e1e1e1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header Styles with Animation */
+header {
+    background-color: var(--header-bg-color);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(87, 161, 67, 0.1), rgba(58, 110, 45, 0.1));
+    animation: gradientBG 15s ease infinite;
+    z-index: 0;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+header .subtitle {
+    font-size: 1.2rem;
+    color: #ddd;
+    margin-bottom: 1.5rem;
+    position: relative;
+    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
+
+header .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    position: relative;
+    animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+header .buttons a {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+header .buttons a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+
+header .buttons a:hover::before {
+    left: 100%;
+}
+
+header .buttons a:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+header .buttons a.secondary {
+    background-color: #555;
+}
+
+header .buttons a.secondary:hover {
+    background-color: #444;
+}
+
+/* Navigation Styles with Animation */
+nav {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    padding: 1rem 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+nav ul::-webkit-scrollbar {
+    display: none;
+}
+
+nav ul li {
+    margin-right: 1.5rem;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+nav ul li:nth-child(1) { animation-delay: 0.1s; }
+nav ul li:nth-child(2) { animation-delay: 0.2s; }
+nav ul li:nth-child(3) { animation-delay: 0.3s; }
+nav ul li:nth-child(4) { animation-delay: 0.4s; }
+nav ul li:nth-child(5) { animation-delay: 0.5s; }
+nav ul li:nth-child(6) { animation-delay: 0.6s; }
+nav ul li:nth-child(7) { animation-delay: 0.7s; }
+nav ul li:nth-child(8) { animation-delay: 0.8s; }
+
+nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* ASCII Banner with Animation */
+.ascii-banner {
+    background-color: #1e1e1e;
+    color: #78e084;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    overflow-x: auto;
+    white-space: pre;
+    font-family: monospace;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: glow 2s ease-in-out infinite alternate;
+    text-align: center;
+    max-width: 1200px;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    to {
+        box-shadow: 0 4px 20px rgba(120, 224, 132, 0.2);
+    }
+}
+
+/* Section Styles with Animation */
+.section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 60px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+}
+
+.section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+h2:hover::after {
+    width: 100px;
+}
+
+/* Feature Cards with Animation */
+.feature-card {
+    background-color: var(--card-bg-color);
+    border-radius: 5px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    transform: translateY(0);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Screenshots with Animation */
+.screenshot-container {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.screenshot-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Code Blocks with Animation */
+pre {
+    background-color: var(--code-bg-color);
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+pre:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Module Cards with Animation */
+.module-card {
+    background-color: var(--card-bg-color);
+    border-radius: 5px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.module-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Footer with Animation */
+footer {
+    margin-top: 4rem;
+    padding: 2rem 0;
+    background-color: var(--header-bg-color);
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(87, 161, 67, 0.1), rgba(58, 110, 45, 0.1));
+    animation: gradientBG 15s ease infinite;
+    z-index: 0;
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 8px var(--accent-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .feature-list, .screenshots {
+        grid-template-columns: 1fr;
+    }
+    
+    .ascii-banner {
+        font-size: 0.7rem;
+    }
+} 
