@@ -1,0 +1,1700 @@
+/* CSS Variables for Light/Dark Mode */
+:root {
+    --bg-primary: #1e1e2e;
+    --bg-secondary: #181825;
+    --text-primary: #cdd6f4;
+    --text-secondary: #a6adc8;
+    --border-color: #313244;
+    --primary-color: #7289da;
+    --primary-color-rgb: 114, 137, 218;
+    --accent-color: #a6e3a1;
+    --hover-color: rgba(114, 137, 218, 0.15);
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --editor-bg: #1e1e2e;
+    --editor-line-bg: #181825;
+    --editor-line-text: #6c7086;
+    --panel-bg: #1e1e2e;
+    --panel-header: #181825;
+    --button-bg: #7289da;
+    --button-text: #ffffff;
+    --button-secondary-bg: #313244;
+    --button-secondary-text: #cdd6f4;
+}
+
+/* Light Mode Styles */
+body:not(.dark-mode) {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f7;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --border-color: #dddddd;
+    --primary-color: #5d75c9;
+    --primary-color-rgb: 93, 117, 201;
+    --accent-color: #5dbd70;
+    --hover-color: rgba(93, 117, 201, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --editor-bg: #f8f8fa;
+    --editor-line-bg: #eaeaec;
+    --editor-line-text: #8a8a9e;
+    --panel-bg: #ffffff;
+    --panel-header: #f1f1f3;
+    --button-bg: #5d75c9;
+    --button-text: #ffffff;
+    --button-secondary-bg: #e4e4e8;
+    --button-secondary-text: #333333;
+}
+
+/* General Theme Styles */
+.playground-hero {
+    height: 30vh;
+    min-height: 200px;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+    position: relative;
+    overflow: hidden;
+}
+
+.playground-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 70% 30%, var(--hover-color), transparent 70%);
+}
+
+.playground-container {
+    position: relative;
+    padding-bottom: 80px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin: 40px 0 50px;
+    flex-wrap: wrap;
+    position: relative;
+    padding-top: 20px;
+}
+
+/* Add some space at the top of the netria section for better scrolling */
+#netria-section {
+    padding-top: 40px;
+    margin-top: 20px;
+}
+
+.controls button {
+    transition: all 0.2s ease-in-out;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.controls button:active {
+    transform: translateY(1px);
+}
+
+.controls .hero-button.primary {
+    padding: 15px 34px;
+    font-size: 1.15rem;
+    min-width: 200px;
+}
+
+.playground-area {
+    display: flex;
+    position: relative;
+    height: 600px;
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+}
+
+/* When Netria is active, add a dimmed overlay effect to the editor */
+.playground-area.netria-active .editor-pane {
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+
+/* Editor Styles */
+.editor-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--editor-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+/* Neovim Title Bar */
+.neovim-title-bar {
+    background-color: var(--panel-header);
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 6px 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    letter-spacing: 1px;
+    user-select: none;
+}
+
+.neovim-title-bar .nvim-logo {
+    color: var(--accent-color);
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+/* Enhanced Neovim-style editor with authentic look */
+.neovim-style-editor {
+    display: flex;
+    height: calc(100% - 30px);
+    font-family: 'JetBrains Mono', monospace;
+    background-color: var(--editor-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    overflow: auto;
+    position: relative;
+}
+
+.line-numbers {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--editor-line-bg);
+    color: var(--editor-line-text);
+    font-size: 14px;
+    padding: 6px 8px;
+    text-align: right;
+    border-right: 1px solid var(--border-color);
+    user-select: none;
+}
+
+.line-number {
+    padding: 1px 4px;
+    min-width: 20px;
+}
+
+.editor-content {
+    flex: 1;
+    padding: 6px 0;
+    white-space: pre;
+    overflow-x: auto;
+    min-height: 100%;
+    background-color: var(--editor-bg);
+    color: var(--text-primary);
+    outline: none;
+    border: none;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+}
+
+.editor-content code {
+    display: block;
+    padding: 0 12px;
+    tab-size: 4;
+    min-height: 100%;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-primary);
+}
+
+/* Neovim status line with mode indicator */
+.neovim-status-line {
+    display: flex;
+    height: 30px;
+    background-color: var(--editor-line-bg);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-primary);
+    align-items: center;
+    user-select: none;
+}
+
+.status-left {
+    padding: 0 12px;
+    background-color: #89b4fa;
+    color: #1e1e2e;
+    font-weight: bold;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.status-filename {
+    padding: 0 12px;
+    flex: 1;
+    color: var(--text-primary);
+}
+
+.status-right {
+    padding: 0 12px;
+    color: var(--text-primary);
+    border-left: 1px solid var(--border-color);
+}
+
+/* Vim cursor styling */
+.vim-cursor-normal {
+    position: relative;
+}
+
+.vim-cursor-normal::after {
+    content: '';
+    position: absolute;
+    height: 1.2em;
+    width: 8px;
+    background-color: rgba(137, 180, 250, 0.6);
+    animation: blink 1s infinite;
+}
+
+.vim-cursor-insert {
+    position: relative;
+}
+
+.vim-cursor-insert::after {
+    content: '';
+    position: absolute;
+    height: 1.2em;
+    width: 2px;
+    background-color: #cba6f7;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Syntax highlighting - Neovim style */
+.keyword { color: #cba6f7; }
+.function { color: #89b4fa; }
+.string { color: #a6e3a1; }
+.comment { color: #6c7086; font-style: italic; }
+.variable { color: #f5c2e7; }
+.number { color: #fab387; }
+
+/* Mode indicators */
+.status-left.normal-mode { background-color: #89b4fa; }
+.status-left.insert-mode { background-color: #a6e3a1; }
+.status-left.visual-mode { background-color: #f5c2e7; }
+.status-left.command-mode { background-color: #fab387; }
+
+/* Netria Window Styles */
+.netria-window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 85%;
+    max-height: 550px;
+    background-color: var(--panel-bg);
+    background: var(--panel-bg);
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px var(--border-color), 0 12px 32px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    opacity: 1;
+    background-image: none;
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
+    visibility: visible;
+}
+
+/* Fixed Window Style */
+.netria-window.fixed {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: none;
+    width: 400px;
+    height: 100%;
+    border-radius: 0;
+    transition: none;
+    box-shadow: -2px 0 15px rgba(0, 0, 0, 0.4);
+}
+
+.netria-window.hidden {
+    opacity: 0;
+    visibility: hidden !important;
+    display: none !important;
+    transform: translate(-50%, -40%);
+}
+
+.netria-window.hidden.fixed {
+    transform: translateX(100%);
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.netria-window.left {
+    top: 0;
+    left: 0;
+    transform: none;
+    height: 100%;
+    width: 45%;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.netria-window.right {
+    top: 0;
+    left: auto;
+    right: 0;
+    transform: none;
+    height: 100%;
+    width: 45%;
+    border-radius: 8px 0 0 8px;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.netria-header {
+    background-color: var(--panel-header);
+    color: var(--text-primary);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    user-select: none;
+}
+
+.netria-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.netria-close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.netria-close:hover {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.netria-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--panel-bg);
+    position: relative;
+}
+
+.netria-banner {
+    padding: 10px;
+    font-family: monospace;
+    font-size: 12px;
+    white-space: pre;
+    overflow: hidden;
+    text-align: center;
+    color: var(--accent-color);
+    user-select: none;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--panel-header);
+}
+
+.netria-files {
+    flex: 1;
+    overflow-y: auto;
+    background-color: var(--panel-bg);
+}
+
+.netria-files table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+}
+
+.netria-files tr {
+    transition: all 0.15s ease;
+    cursor: pointer;
+    color: var(--text-primary);
+    position: relative;
+    user-select: none;
+}
+
+.netria-files tr:hover {
+    background-color: var(--hover-color);
+}
+
+.netria-files td {
+    padding: 6px 12px;
+    border-bottom: 1px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+.netria-files .line-number {
+    width: 30px;
+    text-align: right;
+    padding-right: 8px;
+    color: var(--text-secondary);
+    user-select: none;
+    font-size: 12px;
+    border-right: 1px solid var(--border-color);
+    background-color: var(--editor-line-bg);
+}
+
+.netria-files i {
+    margin-right: 10px;
+    color: var(--text-secondary);
+}
+
+.netria-files .dir i {
+    color: #D7BA7D;
+}
+
+.netria-files .file i {
+    color: #569CD6;
+}
+
+/* Auto-open option */
+.config-group .auto-open-option {
+    margin-left: 10px;
+}
+
+/* Selected item highlight - more Neovim-like */
+.netria-files tr.selected {
+    background-color: rgba(45, 79, 63, 0.8);
+    background: rgba(45, 79, 63, 0.8);
+    color: var(--text-primary);
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.netria-files tr.selected td {
+    border-left: 3px solid var(--primary-color);
+    padding-left: 9px;
+    background-color: transparent;
+}
+
+.netria-files tr.selected:hover {
+    background-color: rgba(55, 95, 75, 0.9);
+}
+
+/* Path display styling */
+.netria-files tr.path-display {
+    background-color: rgba(33, 33, 55, 0.6);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.netria-files tr.path-display td {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.netria-files tr.path-display i {
+    color: #D7BA7D;
+}
+
+.netria-files tr.path-display a {
+    color: var(--primary-color);
+    text-decoration: none;
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+.netria-files tr.path-display a:hover {
+    text-decoration: underline;
+}
+
+/* File Operation Modal */
+.file-operation-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 15;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease;
+}
+
+.file-operation-modal.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.file-operation-modal .modal-content {
+    background-color: var(--bg-primary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    padding: 24px;
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.file-operation-modal.hidden .modal-content {
+    transform: translateY(20px);
+}
+
+.file-operation-modal h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.modal-input-group {
+    margin-bottom: 24px;
+}
+
+.file-operation-modal input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.file-operation-modal input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(114, 137, 218, 0.2);
+    outline: none;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.button.primary {
+    background-color: var(--primary-color);
+    color: var(--bg-primary);
+    border: none;
+    padding: 10px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(114, 137, 218, 0.3);
+}
+
+.button.secondary {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 9px 18px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.button:hover {
+    opacity: 0.95;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Configuration Panel as dropdown */
+.config-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px;
+    max-width: 90vw;
+    max-height: 80vh;
+    background-color: var(--panel-bg);
+    color: var(--text-primary);
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 25px;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--panel-bg);
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+}
+
+.config-panel h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-top: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Syntax highlighting - Neovim style for light mode */
+body:not(.dark-mode) .keyword { color: #9d00ff; }
+body:not(.dark-mode) .function { color: #0070c1; }
+body:not(.dark-mode) .string { color: #008000; }
+body:not(.dark-mode) .comment { color: #747474; font-style: italic; }
+body:not(.dark-mode) .variable { color: #e90091; }
+body:not(.dark-mode) .number { color: #b5745c; }
+
+/* Mode indicators for light mode */
+body:not(.dark-mode) .status-left.normal-mode { background-color: #5d75c9; }
+body:not(.dark-mode) .status-left.insert-mode { background-color: #5dbd70; }
+body:not(.dark-mode) .status-left.visual-mode { background-color: #d373bb; }
+body:not(.dark-mode) .status-left.command-mode { background-color: #dd8c49; }
+
+/* Config grid layout */
+.config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px; /* Increased gap for better spacing */
+    background-color: #1e1e2e !important;
+    background: #1e1e2e !important;
+    margin-bottom: 20px; /* Add margin at bottom for better spacing before button */
+}
+
+.config-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.config-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.config-panel::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 3px;
+}
+
+.config-panel.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.95);
+    pointer-events: none;
+}
+
+.config-panel::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 30px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #1e1e2e; /* Match solid background color */
+    z-index: 1;
+}
+
+.config-group {
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.config-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.config-group input[type="text"],
+.config-group input[type="number"],
+.config-group select {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--button-secondary-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s ease;
+}
+
+.config-group.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.config-group.checkbox-group label {
+    margin-bottom: 0;
+}
+
+.config-group input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: var(--button-secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.config-group input[type="checkbox"]:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.config-group input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Range slider styling */
+.config-group input[type="range"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background-color: var(--button-secondary-bg);
+    border-radius: 4px;
+    margin: 8px 0;
+    transition: all 0.2s ease;
+}
+
+.config-group input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.config-group input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+#width-value,
+#height-value {
+    width: 40px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+#apply-config {
+    width: 100%;
+    margin-top: 28px;
+    padding: 12px;
+    background-color: var(--primary-color) !important;
+    background: var(--primary-color) !important;
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    grid-column: span 2;
+    letter-spacing: 0.03em;
+    box-shadow: 0 2px 6px rgba(114, 137, 218, 0.2);
+}
+
+#apply-config:hover {
+    background-color: #8296e8 !important;
+    background: #8296e8 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(114, 137, 218, 0.4);
+}
+
+#apply-config:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(114, 137, 218, 0.2);
+}
+
+/* For mobile displays */
+@media (max-width: 768px) {
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .config-panel h3 {
+        grid-column: span 1;
+    }
+    
+    #apply-config {
+        grid-column: span 1;
+    }
+    
+    .config-panel {
+        width: 90vw;
+        max-width: 480px;
+        max-height: 75vh;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        transform-origin: top center;
+    }
+    
+    .playground-hero .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .playground-hero .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .controls .hero-button.primary {
+        min-width: 220px;
+        order: -1;
+    }
+}
+
+.keyboard-shortcuts,
+.comparison {
+    margin-top: 60px;
+    background-color: var(--bg-secondary);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+}
+
+.keyboard-shortcuts h3,
+.comparison h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.keyboard-shortcuts table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.keyboard-shortcuts th,
+.keyboard-shortcuts td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.keyboard-shortcuts th {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+}
+
+.keyboard-shortcuts code {
+    background-color: var(--bg-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+/* Fixed window option */
+.config-group .fixed-option {
+    margin-left: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.comparison .screenshots {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.screenshot-container {
+    flex: 1;
+    background-color: var(--bg-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.screenshot-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.screenshot-container h4 {
+    padding: 12px 16px;
+    margin: 0;
+    background-color: var(--bg-secondary);
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.screenshot-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: filter 0.3s ease;
+}
+
+.screenshot-container:hover img {
+    filter: brightness(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .playground-area {
+        height: 500px;
+    }
+    
+    .netria-window {
+        width: 90%;
+        height: 80%;
+        max-height: 450px;
+    }
+    
+    .netria-window.left,
+    .netria-window.right {
+        width: 80%;
+        height: 70%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 8px;
+    }
+    
+    .comparison .screenshots {
+        flex-direction: column;
+    }
+    
+    .screenshot-container {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .netria-window.fixed {
+        width: 280px;
+    }
+}
+
+/* Extra styles to ensure solid background on all elements */
+.netria-window * {
+    background-blend-mode: normal;
+    mix-blend-mode: normal;
+}
+
+/* Add an additional background layer to ensure opacity */
+.netria-window::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-primary);
+    z-index: -1;
+}
+
+/* Neovim Status Line */
+.neovim-status-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, var(--bg-secondary), var(--bg-primary));
+    color: var(--text-primary);
+    padding: 2px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border-color);
+    height: 25px;
+}
+
+.status-left {
+    color: var(--primary-color);
+    font-weight: bold;
+    background-color: rgba(114, 137, 218, 0.1);
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+.status-filename {
+    flex: 1;
+    text-align: center;
+}
+
+.status-right {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+/* Line numbers */
+.line-numbers {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    padding: 10px 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    text-align: right;
+    user-select: none;
+    min-width: 50px;
+    border-right: 1px solid var(--border-color);
+}
+
+.line-number {
+    padding: 0 5px;
+    line-height: 1.5;
+}
+
+.editor-content code {
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Make the code block editable */
+[contenteditable="true"] {
+    caret-color: var(--primary-color);
+    outline: none;
+    min-height: 100px;
+}
+
+[contenteditable="true"]:focus {
+    outline: none;
+}
+
+/* Animations */
+@keyframes fadeInScale {
+    from { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes fadeOutScale {
+    from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    to { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
+}
+
+@keyframes fadeInRight {
+    from { transform: translateX(-10px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes flash {
+    0%, 100% { background-color: var(--primary-color); }
+    50% { background-color: #5b69a2; }
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Hero section styling improvements */
+.playground-hero .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.playground-hero .hero-title {
+    font-size: 4.5rem;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, var(--primary-color), #8296e8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 10px rgba(130, 150, 232, 0.3);
+    animation: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.playground-hero .hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    color: var(--text-secondary);
+    animation: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.playground-hero .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    animation: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Hero button styling - updated with advanced effects */
+.hero-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+.hero-button.primary {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+.hero-button.primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.hero-button.primary:hover {
+    box-shadow: 0 6px 15px rgba(var(--primary-color-rgb), 0.4);
+    transform: translateY(-2px);
+}
+
+.hero-button.primary:hover::after {
+    transform: translateX(100%);
+}
+
+.hero-button.secondary {
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+}
+
+.hero-button.secondary:hover {
+    background-color: var(--button-secondary-bg);
+    box-shadow: 0 6px 15px var(--shadow-color);
+}
+
+.hero-button i {
+    font-size: 0.9em;
+    transition: transform 0.3s ease;
+}
+
+.hero-button:hover i {
+    transform: translateX(3px);
+}
+
+.hero-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.config-group input[type="text"]:focus,
+.config-group select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(114, 137, 218, 0.2);
+    outline: none;
+}
+
+.config-group input[type="range"] {
+    flex: 1;
+    margin-right: 10px;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #2a2a3a !important;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.config-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--primary-color) !important;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.config-group input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+#width-value,
+#height-value {
+    width: 40px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+#apply-config:hover {
+    background-color: #8296e8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(114, 137, 218, 0.3);
+}
+
+#apply-config:active {
+    transform: translateY(0);
+}
+
+/* Config dropdown menu */
+.config-toggle {
+    position: relative;
+    z-index: 10000;
+}
+
+/* Ensure dropdowns remain visible and clickable */
+.config-dropdown ul, 
+.config-dropdown li,
+.config-dropdown li i {
+    z-index: 10001;
+    position: relative;
+}
+
+/* Config dropdown with improved visibility */
+.config-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 220px;
+    /* Solid background color with no transparency */
+    background-color: #1e1e2e !important;
+    background: #1e1e2e !important;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--primary-color);
+    margin-top: 10px;
+    z-index: 10000;
+    transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+    opacity: 1;
+    visibility: visible;
+    transform-origin: top right;
+    /* Prevent backdrop filters and transparency */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    -moz-backdrop-filter: none !important;
+    mix-blend-mode: normal !important;
+}
+
+/* Ensure all dropdown list items have solid backgrounds */
+.config-dropdown li {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+    position: relative;
+    /* Solid background for list items */
+    background-color: #1e1e2e !important;
+    background: #1e1e2e !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.config-dropdown li:hover {
+    background-color: #2a2a3a !important;
+}
+
+/* Solid background for submenu */
+.config-dropdown .submenu {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    width: 160px;
+    background-color: #1e1e2e !important;
+    background: #1e1e2e !important;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    transform: translateX(5px);
+    z-index: 10000;
+    /* Prevent backdrop filters and transparency */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    -moz-backdrop-filter: none !important;
+    mix-blend-mode: normal !important;
+}
+
+/* Add a subtle animation when showing the dropdown */
+@keyframes dropdownAppear {
+    from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.config-dropdown:not(.hidden) {
+    animation: dropdownAppear 0.2s forwards;
+}
+
+.config-dropdown.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px) scale(0.95);
+    pointer-events: none;
+}
+
+.config-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #1e1e2e; /* Match the solid background color */
+    z-index: 1;
+}
+
+.config-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.config-dropdown li:first-child {
+    border-radius: 6px 6px 0 0;
+}
+
+.config-dropdown li:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+.config-dropdown i {
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+/* Submenu styles */
+.config-dropdown .submenu {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    width: 160px;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    transform: translateX(5px);
+    z-index: 10000;
+}
+
+.config-dropdown li:hover > .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.config-dropdown li[data-action="toggle-position"]::after {
+    content: '›';
+    position: absolute;
+    right: 16px;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+/* Alternative submenu position for small screens */
+@media (max-width: 768px) {
+    .config-dropdown .submenu {
+        top: 0;
+        right: -160px; /* Position to the right instead of left */
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 9999;
+    display: none;
+}
+
+/* Glow effect for primary button */
+.glow-effect {
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 15px rgba(114, 137, 218, 0.5);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 15px rgba(114, 137, 218, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(114, 137, 218, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(114, 137, 218, 0.5);
+    }
+}
+
+/* Full-screen hero section */
+.full-screen {
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, #1e1e2e 100%);
+}
+
+.playground-hero .hero-content {
+    text-align: center;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.playground-hero .hero-title {
+    font-size: 4.5rem;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, var(--primary-color), #8296e8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 10px rgba(130, 150, 232, 0.3);
+    animation: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.playground-hero .hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    color: var(--text-secondary);
+    animation: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.hero-actions {
+    margin-top: 40px;
+}
+
+.glow-effect {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.5);
+    background: linear-gradient(45deg, var(--primary-color), #8296e8);
+    border: none;
+}
+
+.glow-effect:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 25px rgba(var(--primary-color-rgb), 0.6);
+}
+
+.glow-effect:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.glow-effect:hover:after {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    font-size: 24px;
+    animation: bounce 2s infinite;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .playground-hero .hero-title {
+        font-size: 3rem;
+    }
+    
+    .playground-hero .hero-subtitle {
+        font-size: 1.2rem;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 2000;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--hover-color);
+    transform: rotate(15deg);
+}
+
+body.dark-mode .theme-toggle-btn .fa-sun {
+    display: block;
+}
+
+body.dark-mode .theme-toggle-btn .fa-moon {
+    display: none;
+}
+
+body:not(.dark-mode) .theme-toggle-btn .fa-sun {
+    display: none;
+}
+
+body:not(.dark-mode) .theme-toggle-btn .fa-moon {
+    display: block;
+}

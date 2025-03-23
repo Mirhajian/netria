@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netria - Interactive Playground | Neovim Plugin</title>
+    <meta name="description" content="Interactive playground for Netria, a clean, modern floating UI for Netrw in Neovim.">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="playground.css">
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+    
+    <!-- Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inline styles for Netria window -->
+    <style>
+        .netria-window {
+            z-index: 9999 !important;
+            position: absolute;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 80% !important;
+            height: 85% !important;
+            max-height: 550px !important;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            background-color: var(--panel-bg) !important;
+            background: var(--panel-bg) !important;
+            /* Prevent transparency */
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            -moz-backdrop-filter: none !important;
+            background-blend-mode: normal !important;
+            mix-blend-mode: normal !important;
+        }
+        
+        /* Ensure all children also have solid backgrounds */
+        .netria-window * {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            -moz-backdrop-filter: none !important;
+            background-blend-mode: normal !important;
+            mix-blend-mode: normal !important;
+        }
+        
+        .netria-header {
+            background-color: var(--panel-header) !important;
+            background: var(--panel-header) !important;
+        }
+        
+        .netria-content {
+            background-color: var(--panel-bg) !important;
+            background: var(--panel-bg) !important;
+        }
+        
+        .netria-files {
+            background-color: var(--panel-bg) !important;
+            background: var(--panel-bg) !important;
+        }
+        
+        .netria-window.hidden {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+        
+        .playground-area {
+            height: 600px !important;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <nav>
+        <div class="container">
+            <div class="menu-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 12h18M3 6h18M3 18h18"/>
+                </svg>
+            </div>
+            <ul>
+                <li><a href="index.html">Documentation</a></li>
+                <li><a href="playground.html" class="active">Playground</a></li>
+                <li><a href="https://github.com/Mirhajian/netria" target="_blank">GitHub</a></li>
+            </ul>
+            <a href="https://github.com/Mirhajian" target="_blank" rel="noopener noreferrer" class="github-profile">
+                <img src="https://github.com/Mirhajian.png" alt="Abolfazl Mirhajian's GitHub Profile">
+            </a>
+        </div>
+    </nav>
+
+    <div class="menu-overlay"></div>
+    <div class="sliding-menu">
+        <div class="menu-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </div>
+        <ul>
+            <li><a href="index.html">Documentation</a></li>
+            <li><a href="playground.html" class="active">Playground</a></li>
+            <li><a href="https://github.com/Mirhajian/netria" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+
+    <section class="hero playground-hero full-screen">
+        <div class="hero-content" style="opacity: 1; visibility: visible;">
+            <h1 class="hero-title" style="opacity: 1; visibility: visible;">Netria</h1>
+            <div class="hero-subtitle" style="opacity: 1; visibility: visible;">A clean, modern floating UI for Netrw in Neovim</div>
+            <div class="hero-actions" style="opacity: 1; visibility: visible;">
+                <button id="scroll-to-netria" class="hero-button primary glow-effect" style="opacity: 1; visibility: visible;">
+                    <i class="fa fa-rocket"></i> Launch Netria
+                </button>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fa fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <main class="container playground-container">
+        <div class="controls">
+            <button id="toggle-btn" class="hero-button primary glow-effect">
+                <i class="fa fa-bolt"></i> Try Netria
+            </button>
+            <div class="config-toggle">
+                <button id="config-btn" class="hero-button secondary">
+                    <i class="fa fa-cog"></i> Configure
+                </button>
+                <div id="config-dropdown" class="config-dropdown hidden" style="z-index: 10000 !important; background-color: #1e1e2e !important; background: #1e1e2e !important;">
+                    <ul>
+                        <li data-action="toggle-panel"><i class="fa fa-sliders"></i> Full Settings</li>
+                        <li data-action="toggle-banner"><i class="fa fa-font"></i> Toggle Banner</li>
+                        <li data-action="toggle-numbers"><i class="fa fa-list-ol"></i> Toggle Line Numbers</li>
+                    </ul>
+                </div>
+            </div>
+            <button id="refresh-btn" class="hero-button secondary">
+                <i class="fa fa-refresh"></i> Refresh Files
+            </button>
+        </div>
+
+        <div id="netria-section" class="playground-area">
+            <div class="editor-pane">
+                <div class="neovim-title-bar">
+                    <span class="nvim-logo">◆</span> NeoVim
+                </div>
+                <div class="neovim-status-line">
+                    <div class="status-left normal-mode">NORMAL</div>
+                    <div class="status-filename">config.lua [+]</div>
+                    <div class="status-right">Ln 17, Col 1 | utf-8 | lua</div>
+                </div>
+                
+                <div class="neovim-style-editor">
+                    <div class="line-numbers">
+                        <div class="line-number">1</div>
+                        <div class="line-number">2</div>
+                        <div class="line-number">3</div>
+                        <div class="line-number">4</div>
+                        <div class="line-number">5</div>
+                        <div class="line-number">6</div>
+                        <div class="line-number">7</div>
+                        <div class="line-number">8</div>
+                        <div class="line-number">9</div>
+                        <div class="line-number">10</div>
+                        <div class="line-number">11</div>
+                        <div class="line-number">12</div>
+                        <div class="line-number">13</div>
+                        <div class="line-number">14</div>
+                        <div class="line-number">15</div>
+                        <div class="line-number">16</div>
+                        <div class="line-number">17</div>
+                    </div>
+                    <div class="editor-content" id="main-editor" contenteditable="true" spellcheck="false">
+                        <code><span class="comment">-- Netria Plugin Configuration</span>
+<span class="keyword">local</span> <span class="variable">netria</span> = <span class="function">require</span>(<span class="string">'netria'</span>)
+
+<span class="comment">-- Default configuration</span>
+<span class="keyword">local</span> <span class="variable">config</span> = {
+  <span class="variable">title</span> = <span class="string">"Netria"</span>,
+  <span class="variable">position</span> = <span class="string">"center"</span>,
+  <span class="variable">width</span> = <span class="number">0.8</span>,
+  <span class="variable">height</span> = <span class="number">0.85</span>,
+  <span class="variable">border</span> = <span class="keyword">true</span>,
+  <span class="variable">border_style</span> = <span class="string">"solid"</span>,
+  <span class="variable">show_line_numbers</span> = <span class="keyword">true</span>,
+  <span class="variable">enable_banner</span> = <span class="keyword">true</span>
+}
+
+<span class="comment">-- Setup the plugin with custom config</span>
+<span class="variable">netria</span>.<span class="function">setup</span>(<span class="variable">config</span>)
+
+<span class="comment">-- Key mappings for Netria</span>
+<span class="function">vim.keymap.set</span>(<span class="string">'n'</span>, <span class="string">'&lt;leader&gt;e'</span>, <span class="function">netria.toggle</span>, { <span class="variable">desc</span> = <span class="string">"Toggle Netria"</span> })
+</code>
+                    </div>
+                </div>
+            </div>
+
+            <div id="netria-window" class="netria-window hidden" style="z-index: 9999 !important;">
+                <div class="netria-header">
+                    <div class="netria-title"> Netria </div>
+                    <div class="netria-close">×</div>
+                </div>
+                <div class="netria-content">
+                    <div class="netria-banner">
+  ███╗   ██╗███████╗████████╗██████╗ ██╗ █████╗ 
+  ████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║██╔══██╗
+  ██╔██╗ ██║█████╗     ██║   ██████╔╝██║███████║
+  ██║╚██╗██║██╔══╝     ██║   ██╔══██╗██║██╔══██║
+  ██║ ╚████║███████╗   ██║   ██║  ██║██║██║  ██║
+  ╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝
+                                            v1.0.0
+                    </div>
+                    <div class="netria-files">
+                        <table>
+                            <tbody id="files-list">
+                                <tr class="dir parent">
+                                    <td class="line-number">1</td>
+                                    <td>../</td>
+                                </tr>
+                                <tr class="dir">
+                                    <td class="line-number">2</td>
+                                    <td>docs/</td>
+                                </tr>
+                                <tr class="dir">
+                                    <td class="line-number">3</td>
+                                    <td>lua/</td>
+                                </tr>
+                                <tr class="file">
+                                    <td class="line-number">4</td>
+                                    <td>README.md</td>
+                                </tr>
+                                <tr class="file">
+                                    <td class="line-number">5</td>
+                                    <td>init.lua</td>
+                                </tr>
+                                <tr class="file">
+                                    <td class="line-number">6</td>
+                                    <td>config.lua</td>
+                                </tr>
+                                <tr class="file">
+                                    <td class="line-number">7</td>
+                                    <td>ui.lua</td>
+                                </tr>
+                                <tr class="file">
+                                    <td class="line-number">8</td>
+                                    <td>banner.lua</td>
+                                </tr>
+                                <tr class="file">
+                                    <td class="line-number">9</td>
+                                    <td>commands.lua</td>
+                                </tr>
+                                <tr class="file">
+                                    <td class="line-number">10</td>
+                                    <td>events.lua</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="config-panel" class="config-panel hidden" style="z-index: 1100 !important; background-color: #1e1e2e !important; background: #1e1e2e !important;">
+            <h3>Netria Configuration</h3>
+            <div class="config-grid">
+                <div class="config-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" value="Netria">
+                </div>
+                <div class="config-group slider-group">
+                    <label for="width">Width</label>
+                    <div class="slider-container">
+                        <input type="range" id="width" min="0.1" max="1.0" step="0.1" value="0.8">
+                        <span id="width-value">0.8</span>
+                    </div>
+                </div>
+                <div class="config-group slider-group">
+                    <label for="height">Height</label>
+                    <div class="slider-container">
+                        <input type="range" id="height" min="0.1" max="1.0" step="0.1" value="0.85">
+                        <span id="height-value">0.85</span>
+                    </div>
+                </div>
+                <div class="config-group">
+                    <label for="border-style">Border Style</label>
+                    <select id="border-style">
+                        <option value="none">None</option>
+                        <option value="single">Single</option>
+                        <option value="double">Double</option>
+                        <option value="rounded">Rounded</option>
+                        <option value="solid" selected>Solid</option>
+                        <option value="shadow">Shadow</option>
+                    </select>
+                </div>
+                <div class="config-group checkbox-group">
+                    <label for="show-line-numbers">Show Line Numbers</label>
+                    <input type="checkbox" id="show-line-numbers" checked>
+                </div>
+                <div class="config-group checkbox-group">
+                    <label for="enable-banner">Show Banner</label>
+                    <input type="checkbox" id="enable-banner" checked>
+                </div>
+            </div>
+            <button id="apply-config" class="hero-button primary">Apply Configuration</button>
+        </div>
+
+        <div class="keyboard-shortcuts">
+            <h3>Keyboard Shortcuts</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>e</code></td>
+                        <td>Toggle Netria on/off</td>
+                    </tr>
+                    <tr>
+                        <td><code>j</code></td>
+                        <td>Move down an item</td>
+                    </tr>
+                    <tr>
+                        <td><code>k</code></td>
+                        <td>Move up an item</td>
+                    </tr>
+                    <tr>
+                        <td><code>Enter</code></td>
+                        <td>Open file/directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>-</code></td>
+                        <td>Go up one directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>d</code></td>
+                        <td>Create directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>%</code></td>
+                        <td>Create file</td>
+                    </tr>
+                    <tr>
+                        <td><code>D</code></td>
+                        <td>Delete file/directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>R</code></td>
+                        <td>Rename file/directory</td>
+                    </tr>
+                    <tr>
+                        <td><code>q</code></td>
+                        <td>Close Netria</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- File Operation Modal -->
+        <div id="file-operation-modal" class="file-operation-modal hidden">
+            <div class="modal-content">
+                <h3 id="modal-title">Create New File</h3>
+                <div class="modal-input-group">
+                    <input type="text" id="file-operation-input" placeholder="Enter file name...">
+                </div>
+                <div class="modal-buttons">
+                    <button id="cancel-operation" class="button secondary">Cancel</button>
+                    <button id="confirm-operation" class="button primary">Create</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <h3>Before and After Netria</h3>
+            <div class="screenshots">
+                <div class="screenshot-container">
+                    <h4>Standard Netrw (Before)</h4>
+                    <img src="../assets/before.png" alt="Standard Netrw interface before Netria" />
+                </div>
+                <div class="screenshot-container">
+                    <h4>With Netria (After)</h4>
+                    <img src="../assets/after.png" alt="Enhanced Netrw interface with Netria" />
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                Netria is open source software. Visit the 
+                <a href="https://github.com/Mirhajian/netria" target="_blank">GitHub repository</a> 
+                to contribute or report issues.
+            </p>
+            <p>
+                Created by <a href="https://github.com/Mirhajian" target="_blank">Abolfazl Mirhajian</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="playground.js"></script>
+</body>
+</html> 
